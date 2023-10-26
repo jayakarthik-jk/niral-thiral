@@ -1,15 +1,16 @@
-import { relations, sql } from "drizzle-orm";
 import {
-  bigint,
-  index,
-  int,
-  mysqlTableCreator,
-  primaryKey,
-  text,
   timestamp,
-  varchar,
-} from "drizzle-orm/mysql-core";
-import { type AdapterAccount } from "next-auth/adapters";
+  pgTable,
+  text,
+  primaryKey,
+  integer,
+  pgEnum,
+  serial,
+} from "drizzle-orm/pg-core";
+import { type Account } from "next-auth";
+
+import { createInsertSchema } from "drizzle-zod";
+import { relations } from "drizzle-orm";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -17,93 +18,142 @@ import { type AdapterAccount } from "next-auth/adapters";
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const mysqlTable = mysqlTableCreator((name) => `niral-thiral_${name}`);
 
-export const posts = mysqlTable(
-  "post",
-  {
-    id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
-    name: varchar("name", { length: 256 }),
-    createdById: varchar("createdById", { length: 255 }).notNull(),
-    createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updatedAt").onUpdateNow(),
-  },
-  (example) => ({
-    createdByIdIdx: index("createdById_idx").on(example.createdById),
-    nameIndex: index("name_idx").on(example.name),
-  })
-);
-
-export const users = mysqlTable("user", {
-  id: varchar("id", { length: 255 }).notNull().primaryKey(),
-  name: varchar("name", { length: 255 }),
-  email: varchar("email", { length: 255 }).notNull(),
-  emailVerified: timestamp("emailVerified", {
-    mode: "date",
-    fsp: 3,
-  }).default(sql`CURRENT_TIMESTAMP(3)`),
-  image: varchar("image", { length: 255 }),
-});
-
-export const usersRelations = relations(users, ({ many }) => ({
-  accounts: many(accounts),
-}));
-
-export const accounts = mysqlTable(
+export const accounts = pgTable(
   "account",
   {
-    userId: varchar("userId", { length: 255 }).notNull(),
-    type: varchar("type", { length: 255 })
-      .$type<AdapterAccount["type"]>()
-      .notNull(),
-    provider: varchar("provider", { length: 255 }).notNull(),
-    providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    type: text("type").$type<Account["type"]>().notNull(),
+    provider: text("provider").notNull(),
+    providerAccountId: text("providerAccountId").notNull(),
     refresh_token: text("refresh_token"),
     access_token: text("access_token"),
-    expires_at: int("expires_at"),
-    token_type: varchar("token_type", { length: 255 }),
-    scope: varchar("scope", { length: 255 }),
+    expires_at: integer("expires_at"),
+    token_type: text("token_type"),
+    scope: text("scope"),
     id_token: text("id_token"),
-    session_state: varchar("session_state", { length: 255 }),
+    session_state: text("session_state"),
   },
   (account) => ({
     compoundKey: primaryKey(account.provider, account.providerAccountId),
-    userIdIdx: index("userId_idx").on(account.userId),
-  })
+  }),
 );
 
-export const accountsRelations = relations(accounts, ({ one }) => ({
-  user: one(users, { fields: [accounts.userId], references: [users.id] }),
-}));
+export const sessions = pgTable("session", {
+  sessionToken: text("sessionToken").notNull().primaryKey(),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  expires: timestamp("expires", { mode: "date" }).notNull(),
+});
 
-export const sessions = mysqlTable(
-  "session",
-  {
-    sessionToken: varchar("sessionToken", { length: 255 })
-      .notNull()
-      .primaryKey(),
-    userId: varchar("userId", { length: 255 }).notNull(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  },
-  (session) => ({
-    userIdIdx: index("userId_idx").on(session.userId),
-  })
-);
-
-export const sessionsRelations = relations(sessions, ({ one }) => ({
-  user: one(users, { fields: [sessions.userId], references: [users.id] }),
-}));
-
-export const verificationTokens = mysqlTable(
+export const verificationTokens = pgTable(
   "verificationToken",
   {
-    identifier: varchar("identifier", { length: 255 }).notNull(),
-    token: varchar("token", { length: 255 }).notNull(),
+    identifier: text("identifier").notNull(),
+    token: text("token").notNull(),
     expires: timestamp("expires", { mode: "date" }).notNull(),
   },
   (vt) => ({
     compoundKey: primaryKey(vt.identifier, vt.token),
-  })
+  }),
 );
+
+export const roles = pgEnum("role", ["USER", "COORDINATOR"]);
+
+// ******************  Schema  ****************** //
+export const users = pgTable("user", {
+  id: text("id").notNull().primaryKey(),
+  name: text("name"),
+  email: text("email").notNull(),
+  emailVerified: timestamp("emailVerified", { mode: "date" }),
+  image: text("image"),
+  role: roles("roles").notNull().default("USER"),
+  college: text("college"),
+  year: integer("year"),
+  department: text("department"),
+  contact: text("contact"),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+export const userRelation = relations(users, ({ many }) => ({
+  participatedTeams: many(teams),
+}));
+
+export const eventTypes = ["Technical", "NonTechnical"] as const;
+export type eventTypes = (typeof eventTypes)[number];
+
+export const platforms = ["School", "College"] as const;
+export type platforms = (typeof platforms)[number];
+
+export const teams = pgTable("team", {
+  id: serial("id").notNull().primaryKey(),
+  name: text("name"),
+  slug: text("slug").notNull().unique(),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+export const teamsRelation = relations(teams, ({ many }) => ({
+  members: many(users),
+  registeredEvents: many(events),
+}));
+
+export const insertTeamsSchema = createInsertSchema(teams);
+
+export const registrations = pgTable(
+  "registration",
+  {
+    teamId: integer("teamId")
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
+    eventId: integer("eventId")
+      .notNull()
+      .references(() => events.id, { onDelete: "cascade" }),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  },
+  (self) => ({
+    compoundKey: primaryKey(self.eventId, self.teamId),
+  }),
+);
+// export const insertRegistrationSchema = createInsertSchema(registrations);
+
+export const members = pgTable(
+  "member",
+  {
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    teamId: integer("teamId")
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
+  },
+  (self) => ({
+    compoundKey: primaryKey(self.teamId, self.userId),
+  }),
+);
+// export const insertMembersSchema = createInsertSchema(members);
+
+export const events = pgTable("event", {
+  id: serial("id").notNull().primaryKey(),
+  title: text("title").notNull(),
+  slug: text("slug").notNull().unique(),
+  description: text("description").notNull(),
+  type: text("type", { enum: eventTypes }).notNull(),
+  platform: text("platform", { enum: platforms }).notNull(),
+  membersPerTeam: integer("membersPerTeam").default(3),
+
+  // coordinators details
+  coordinatorName: text("coordinatorName").notNull(),
+  coordinatorContact: text("coordinatorContact").notNull(),
+  coordinatorEmail: text("coordinatorEmail").notNull(),
+
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+export const eventRelation = relations(events, ({ many }) => ({
+  registeredTeams: many(teams),
+}));
+
+export const insertEventsSchema = createInsertSchema(events);
