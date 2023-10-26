@@ -1,17 +1,15 @@
-import { api } from "@/trpc/server";
-import { SignupButton } from "./SignupButton";
-import { CreateEventButton } from "./CreateEventButton";
-import { getServerAuthSession } from "@/server/auth";
+import EventSection from "@/components/EventSection";
+import HeroSection from "@/components/HeroSection";
+import Navbar from "@/components/Navbar";
+import AboutSection from "@/components/AboutSection";
 
-export default async function Home() {
-  const events = await api.event.getEvents.query({});
-  const session = await getServerAuthSession();
-  console.log(events);
+export default function Home() {
   return (
-    <main>
-      hello world
-      <SignupButton />
-      {session && <CreateEventButton userId={session.user.id} />}
+    <main className="flex min-h-screen flex-col bg-white">
+      <Navbar />
+      <HeroSection />
+      <AboutSection />
+      <EventSection />
     </main>
   );
 }

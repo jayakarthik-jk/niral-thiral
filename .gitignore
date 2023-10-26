@@ -41,3 +41,5 @@ pnpm-lock.yaml
 # typescript
 *.tsbuildinfo
 .temp
+
+bun.lockb
