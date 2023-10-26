@@ -14,7 +14,7 @@ export default function Event() {
             </div>
             <div className="price">
               <div className="text-center">1k</div>
-              <div>WINNER</div>
+              <div>RUNNER</div>
             </div>
           </div>
         </div>

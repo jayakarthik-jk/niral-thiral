@@ -6,7 +6,7 @@ import type { FC } from "react";
 
 function Navbar() {
   return (
-    <nav className="fixed top-0 z-50 flex w-full pt-5">
+    <nav className="sticky top-0 z-50 w-full bg-white py-5 shadow-lg">
       <Container>
         <div className="flex w-full items-center justify-between">
           <div className="left flex items-center justify-center gap-2">
@@ -19,7 +19,7 @@ function Navbar() {
             />
           </div>
           <div className="right flex w-fit">
-            <NavItem href="#events" variant="link">
+            <NavItem href="/events" variant="link">
               Events
             </NavItem>
             <NavItem href="#sponsers" variant="link">
