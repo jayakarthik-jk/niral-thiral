@@ -52,7 +52,7 @@ interface CounterProps {
 
 const Counter: FC<CounterProps> = ({ days, hours, minutes, seconds }) => {
   return (
-    <div className="counter flex w-full items-center gap-3 rounded-md text-2xl md:gap-5 md:p-5 md:text-6xl">
+    <div className="counter flex w-full items-center justify-center gap-3 rounded-md text-2xl md:gap-5 md:p-5 md:text-6xl">
       <ClockTile digits={days} type={"Days"} />
       <ClockTile digits={hours} type={"Hours"} />
       <ClockTile digits={minutes} type={"Minutes"} />
