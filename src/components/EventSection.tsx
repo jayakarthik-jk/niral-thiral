@@ -1,6 +1,3 @@
-import Container from "./Container";
-
-function EventSection() {
+export default function EventSection() {
   return <section>{/* <Container></Container> */}</section>;
 }
-export default EventSection;

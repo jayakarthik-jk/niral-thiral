@@ -1,11 +1,11 @@
 "use client";
 
-import { FC, useEffect, useState } from "react";
+import { type FC, useEffect, useState } from "react";
 import Container from "./Container";
 
 const End = new Date("2023-11-02").valueOf();
 
-function AboutSection() {
+export default function AboutSection() {
   const [days, setDays] = useState(0);
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
@@ -76,5 +76,3 @@ const ClockTile: FC<ClockTileProps> = ({ digits, type }) => {
     </p>
   );
 };
-
-export default AboutSection;

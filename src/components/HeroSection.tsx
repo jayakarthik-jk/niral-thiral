@@ -1,6 +1,6 @@
 import Container from "./Container";
 
-function HeroSection() {
+export default function HeroSection() {
   return (
     <section
       id="hero"
@@ -12,4 +12,3 @@ function HeroSection() {
     </section>
   );
 }
-export default HeroSection;

@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Container from "./Container";
-import { Button } from "./ui/button";
-import Link from "next/link";
-import type { FC } from "react";
+import { NavItem } from "./NavItem";
+import RegisterButton from "./RegisterButton";
+import { getServerAuthSession } from "@/server/auth";
 
-function Navbar() {
+export default async function Navbar() {
+  const session = await getServerAuthSession();
   return (
     <nav className="fixed top-0 z-50 flex w-full pt-5">
       <Container>
@@ -28,42 +29,10 @@ function Navbar() {
             <NavItem href="#contact" variant="link">
               Contacts
             </NavItem>
-            <NavItem href="/register" variant="default">
-              Register Now
-            </NavItem>
+            <RegisterButton user={session?.user} />
           </div>
         </div>
       </Container>
     </nav>
   );
 }
-
-interface ItemProp {
-  children: React.ReactNode;
-  href?: string;
-  variant:
-    | "link"
-    | "default"
-    | "destructive"
-    | "outline"
-    | "secondary"
-    | "ghost"
-    | null
-    | undefined;
-}
-
-const NavItem: FC<ItemProp> = ({ children, href, variant }) => {
-  return variant === "link" ? (
-    <Button variant={"link"}>
-      <Link href={href!}>{children}</Link>
-    </Button>
-  ) : (
-    <Link href={href ? href : ""}>
-      <Button className="mx-2" variant={variant}>
-        {children}
-      </Button>
-    </Link>
-  );
-};
-
-export default Navbar;
