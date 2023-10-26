@@ -1,6 +1,3 @@
-import Container from "./Container";
-import Counter from "./Counter";
-
 function AboutSection() {
   return (
     <section
