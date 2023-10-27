@@ -3,7 +3,7 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
 
-export const userRouter = createTRPCRouter({
+export const usersRouter = createTRPCRouter({
   createUser: publicProcedure
     .input(insertUserSchema)
     .mutation(async ({ input, ctx: { db } }) => {
