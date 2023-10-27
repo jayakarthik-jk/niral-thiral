@@ -1,4 +1,4 @@
-function AboutSection() {
+export default function AboutSection() {
   return (
     <section
       id="about"
@@ -6,5 +6,3 @@ function AboutSection() {
     ></section>
   );
 }
-
-export default AboutSection;

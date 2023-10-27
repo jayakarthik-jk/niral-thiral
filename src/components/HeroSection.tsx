@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import Container from "./Container";
 import Counter from "./Counter";
 
-function HeroSection() {
+export default function HeroSection() {
   return (
     <section id="hero" className="relative flex h-[70vh] bg-cover bg-no-repeat">
       <Container className="flex-col items-center justify-center gap-10 bg-[url(/bg.jpg)] bg-cover">
@@ -231,5 +231,3 @@ const ColorLogo = ({ className }: { className?: string }) => (
     </defs>
   </svg>
 );
-
-export default HeroSection;

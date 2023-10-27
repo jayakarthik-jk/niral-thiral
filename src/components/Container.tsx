@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-function Container({
+export default function Container({
   children,
   className = "",
 }: {
@@ -14,4 +14,3 @@ function Container({
     </div>
   );
 }
-export default Container;

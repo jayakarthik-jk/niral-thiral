@@ -1,10 +1,7 @@
 import Image from "next/image";
 import Container from "./Container";
-import { Button } from "./ui/button";
-import Link from "next/link";
-import type { FC } from "react";
 
-function Navbar() {
+export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 w-full bg-white py-5 shadow-lg">
       <Container>
@@ -28,9 +25,7 @@ function Navbar() {
             <NavItem href="#contact" variant="link">
               Contacts
             </NavItem>
-            <NavItem href="/register" variant="default">
-              Register Now
-            </NavItem>
+            <NavItem variant="default">Register Now</NavItem>
           </div>
         </div>
       </Container>
@@ -38,32 +33,46 @@ function Navbar() {
   );
 }
 
-interface ItemProp {
-  children: React.ReactNode;
-  href?: string;
-  variant:
-    | "link"
-    | "default"
-    | "destructive"
-    | "outline"
-    | "secondary"
-    | "ghost"
-    | null
-    | undefined;
-}
+import { Button } from "./ui/button";
+import Link from "next/link";
+import { type FC } from "react";
 
-const NavItem: FC<ItemProp> = ({ children, href, variant }) => {
+export type ItemProps = {
+  children: React.ReactNode;
+  onClick?: () => void;
+} & (
+  | {
+      href?: string;
+      variant:
+        | "default"
+        | "destructive"
+        | "outline"
+        | "secondary"
+        | "ghost"
+        | null
+        | undefined;
+    }
+  | {
+      href: string;
+      variant: "link";
+    }
+);
+
+export const NavItem: FC<ItemProps> = ({
+  children,
+  href,
+  variant,
+  onClick: handleClick,
+}) => {
   return variant === "link" ? (
-    <Button variant={"link"}>
-      <Link href={href!}>{children}</Link>
+    <Button variant={"link"} onClick={handleClick}>
+      <Link href={href}>{children}</Link>
     </Button>
   ) : (
-    <Link href={href ? href : ""}>
+    <Link href={href ?? ""} onClick={handleClick}>
       <Button className="mx-2" variant={variant}>
         {children}
       </Button>
     </Link>
   );
 };
-
-export default Navbar;
