@@ -1,11 +1,7 @@
 import Image from "next/image";
 import Container from "./Container";
-import { NavItem } from "./NavItem";
-import RegisterButton from "./RegisterButton";
-import { getServerAuthSession } from "@/server/auth";
 
-export default async function Navbar() {
-  const session = await getServerAuthSession();
+export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 w-full bg-white py-5 shadow-lg">
       <Container>
@@ -29,10 +25,54 @@ export default async function Navbar() {
             <NavItem href="#contact" variant="link">
               Contacts
             </NavItem>
-            <RegisterButton user={session?.user} />
+            <NavItem variant="default">Register Now</NavItem>
           </div>
         </div>
       </Container>
     </nav>
   );
 }
+
+import { Button } from "./ui/button";
+import Link from "next/link";
+import { type FC } from "react";
+
+export type ItemProps = {
+  children: React.ReactNode;
+  onClick?: () => void;
+} & (
+  | {
+      href?: string;
+      variant:
+        | "default"
+        | "destructive"
+        | "outline"
+        | "secondary"
+        | "ghost"
+        | null
+        | undefined;
+    }
+  | {
+      href: string;
+      variant: "link";
+    }
+);
+
+export const NavItem: FC<ItemProps> = ({
+  children,
+  href,
+  variant,
+  onClick: handleClick,
+}) => {
+  return variant === "link" ? (
+    <Button variant={"link"} onClick={handleClick}>
+      <Link href={href}>{children}</Link>
+    </Button>
+  ) : (
+    <Link href={href ?? ""} onClick={handleClick}>
+      <Button className="mx-2" variant={variant}>
+        {children}
+      </Button>
+    </Link>
+  );
+};
