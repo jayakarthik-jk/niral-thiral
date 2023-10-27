@@ -1,7 +1,12 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
-import { eventTypes, events, platforms } from "@/server/db/schema";
+import {
+  eventTypes,
+  events,
+  insertEventSchema,
+  platforms,
+} from "@/server/db/schema";
 import { and, eq } from "drizzle-orm";
 
 export const eventsRouter = createTRPCRouter({
@@ -9,8 +14,8 @@ export const eventsRouter = createTRPCRouter({
     .input(
       z
         .object({
-          type: z.enum(eventTypes).optional(),
-          platform: z.enum(platforms).optional(),
+          type: z.enum(eventTypes.enumValues).optional(),
+          platform: z.enum(platforms.enumValues).optional(),
         })
         .default({}),
     )
@@ -34,5 +39,10 @@ export const eventsRouter = createTRPCRouter({
     )
     .query(async ({ input: { id }, ctx: { db } }) => {
       return await db.query.events.findFirst({ where: eq(events.id, id) });
+    }),
+  createEvent: protectedProcedure
+    .input(insertEventSchema)
+    .mutation(async ({ input, ctx: { db } }) => {
+      return db.insert(events).values(input);
     }),
 });

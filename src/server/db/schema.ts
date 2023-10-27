@@ -4,12 +4,13 @@ import {
   text,
   primaryKey,
   integer,
-  pgEnum,
   serial,
+  boolean,
+  pgEnum,
 } from "drizzle-orm/pg-core";
 
 import { createInsertSchema } from "drizzle-zod";
-import { relations } from "drizzle-orm";
+import { z } from "zod";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -20,82 +21,33 @@ import { relations } from "drizzle-orm";
 
 // ******************  Schema  ****************** //
 
-export const roles = pgEnum("role", ["USER", "COORDINATOR"]);
-
 export const users = pgTable("user", {
   id: serial("id").notNull().primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull(),
-  role: roles("roles").notNull().default("USER"),
-  college: text("college"),
-  year: integer("year"),
-  department: text("department"),
-  contact: text("contact"),
+  gender: text("gender", { enum: ["male", "female", "other"] }).notNull(),
+  college: text("college").notNull(),
+  year: integer("year").notNull(),
+  department: text("department").notNull(),
+  contact: text("contact").notNull(),
+
+  role: text("role", { enum: ["student", "faculty"] }).default("student"),
+  foodIssued: boolean("foodIssued").$default(() => false),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
 });
 
-export const userRelation = relations(users, ({ many }) => ({
-  participatedTeams: many(teams),
-}));
+export const insertUserSchema = createInsertSchema(users);
 
-export const eventTypes = ["Technical", "NonTechnical"] as const;
-export type eventTypes = (typeof eventTypes)[number];
+export const eventTypes = pgEnum("eventTypes", ["Technical", "NonTechnical"]);
 
-export const platforms = ["School", "College"] as const;
-export type platforms = (typeof platforms)[number];
-
-export const teams = pgTable("team", {
-  id: serial("id").notNull().primaryKey(),
-  name: text("name"),
-  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
-});
-
-export const teamsRelation = relations(teams, ({ many }) => ({
-  members: many(users),
-  registeredEvents: many(events),
-}));
-
-export const insertTeamsSchema = createInsertSchema(teams);
-
-export const registrations = pgTable(
-  "registration",
-  {
-    teamId: integer("teamId")
-      .notNull()
-      .references(() => teams.id, { onDelete: "cascade" }),
-    eventId: integer("eventId")
-      .notNull()
-      .references(() => events.id, { onDelete: "cascade" }),
-    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
-  },
-  (self) => ({
-    compoundKey: primaryKey(self.eventId, self.teamId),
-  }),
-);
-// export const insertRegistrationSchema = createInsertSchema(registrations);
-
-export const members = pgTable(
-  "member",
-  {
-    userId: integer("userId")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    teamId: integer("teamId")
-      .notNull()
-      .references(() => teams.id, { onDelete: "cascade" }),
-  },
-  (self) => ({
-    compoundKey: primaryKey(self.teamId, self.userId),
-  }),
-);
-// export const insertMembersSchema = createInsertSchema(members);
+export const platforms = pgEnum("platforms", ["School", "College"]);
 
 export const events = pgTable("event", {
   id: serial("id").notNull().primaryKey(),
   title: text("title").notNull(),
   description: text("description").notNull(),
-  type: text("type", { enum: eventTypes }).notNull(),
-  platform: text("platform", { enum: platforms }).notNull(),
+  type: eventTypes("type").notNull(),
+  platform: platforms("platform").notNull(),
   membersPerTeam: integer("membersPerTeam").default(3),
 
   // coordinators details
@@ -106,8 +58,24 @@ export const events = pgTable("event", {
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
 });
 
-export const eventRelation = relations(events, ({ many }) => ({
-  registeredTeams: many(teams),
-}));
+export const insertEventSchema = createInsertSchema(events);
 
-export const insertEventsSchema = createInsertSchema(events);
+export const registrations = pgTable(
+  "registration",
+  {
+    userId: integer("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    eventId: integer("eventId")
+      .notNull()
+      .references(() => events.id, { onDelete: "cascade" }),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  },
+  (self) => ({
+    compoundKey: primaryKey(self.eventId, self.userId),
+  }),
+);
+
+export const insertRegistrationSchema = createInsertSchema(registrations);
+
+export const idSchema = z.number().int();
