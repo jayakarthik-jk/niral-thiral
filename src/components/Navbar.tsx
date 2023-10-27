@@ -25,7 +25,9 @@ export default function Navbar() {
             <NavItem href="#contact" variant="link">
               Contacts
             </NavItem>
-            <NavItem variant="default">Register Now</NavItem>
+            <NavItem href="/register" variant="default">
+              Register Now
+            </NavItem>
           </div>
         </div>
       </Container>
