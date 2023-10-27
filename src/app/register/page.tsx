@@ -1,34 +1,40 @@
 import Container from "@/components/Container";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 import type { FC } from "react";
 
 export default function RegisterPage() {
   return (
-    <Container>
-      <form
-        className="flex w-full max-w-[700px] flex-col gap-5 rounded-md border"
-        action="mailto:imnaveenbharath@gmail.com"
-      >
+    <Container className="min-h-screen bg-[url(/bg.jpg)] bg-cover px-0">
+      <form className="relative flex w-full max-w-[700px] flex-col gap-5 rounded-md border bg-white px-10 py-10 md:my-10">
+        <div className="mx-auto mb-5 w-fit space-y-5 text-center">
+          <Image
+            className="w-96"
+            src="/logo.png"
+            width={400}
+            height={400}
+            alt="logo"
+          />
+          <h1 className="text-2xl font-bold">Event Registration Form</h1>
+        </div>
         <InputField type="text" label="Your Name: " />
         <InputField type="email" label="Email ID: " />
-        <div className="flex w-full items-end gap-5">
+        <div className="flex w-full flex-col gap-5 md:flex-row">
           <InputField type="number" label="Mobile: " className="w-full" />
           <Gender />
         </div>
-        <InputField label="Your College Name: " />
+        <InputField label="College Name: " />
         <div className="flex w-full gap-5">
-          <Label className="w-full">
-            Department:
-            <Input />
-          </Label>
-          <Label className="w-full">
-            Year of Study:
-            <Input />
-          </Label>
+          <InputField label="Department: " className="w-full" />
+          <InputField label="Year of Study: " className="w-full" />
         </div>
+        <Button className="my-10" type="submit">
+          Register
+        </Button>
       </form>
     </Container>
   );
@@ -57,7 +63,7 @@ const InputField: FC<InputFieldProps> = ({
 
 const Gender = () => {
   return (
-    <Label className="flex w-[300px] flex-col justify-around gap-2">
+    <Label className="flex max-w-[300px] flex-col items-start gap-2">
       Gender:
       <RadioGroup
         defaultValue="none"
