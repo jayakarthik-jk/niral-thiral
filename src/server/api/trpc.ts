@@ -7,12 +7,14 @@
  * need to use are documented accordingly near the end.
  */
 
-import { initTRPC } from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
 import { type NextRequest } from "next/server";
 import superjson from "superjson";
-import { ZodError } from "zod";
+import { z, ZodError } from "zod";
 
 import { db } from "@/server/db";
+import { eq } from "drizzle-orm";
+import { idSchema, users } from "../db/schema";
 
 /**
  * 1. CONTEXT
@@ -110,3 +112,16 @@ export const publicProcedure = t.procedure;
  *
  * @see https://trpc.io/docs/procedures
  */
+
+export const protectedProcedure = publicProcedure
+  .input(z.object({ userId: idSchema }))
+  .use(async ({ input, ctx: { db }, next }) => {
+    const user = await db.query.users.findFirst({
+      where: eq(users.id, input.userId),
+      columns: {},
+    });
+    if (!user) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+    return next();
+  });
