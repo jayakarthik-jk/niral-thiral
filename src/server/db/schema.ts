@@ -39,8 +39,10 @@ export const users = pgTable("user", {
 export const insertUserSchema = createInsertSchema(users);
 
 export const eventTypes = pgEnum("eventTypes", ["Technical", "NonTechnical"]);
+export type eventTypes = (typeof eventTypes.enumValues)[number];
 
 export const platforms = pgEnum("platforms", ["School", "College"]);
+export type platforms = (typeof platforms.enumValues)[number];
 
 export const events = pgTable("event", {
   id: serial("id").notNull().primaryKey(),
