@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { type genders } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState, type FC } from "react";
 import { z } from "zod";
 
@@ -32,7 +33,7 @@ interface FormErrorType {
 export default function RegisterPage() {
   const [gender, setGender] = useState<genders>("male");
   const [error, setError] = useState<FormErrorType | undefined>();
-
+  const router = useRouter();
   const registerApi = api.users.createUser.useMutation();
 
   return (
@@ -47,7 +48,7 @@ export default function RegisterPage() {
           }
           const { data } = validationResult;
           try {
-            await registerApi.mutateAsync({
+            const useerId = await registerApi.mutateAsync({
               name: data.username.value,
               college: data.college.value,
               contact: data.contact.value,
@@ -56,6 +57,7 @@ export default function RegisterPage() {
               year: +data.year.value,
               gender,
             });
+            return router.push(`/users/${useerId}`);
           } catch (error) {
             setError((oldError) => ({ ...oldError, serverError: true }));
           }
@@ -150,7 +152,7 @@ export default function RegisterPage() {
         >
           Register
         </Button>
-        {/* display error message fi serverError is true */}
+        {/* display error message if error.serverError is true or registerApi.isError */}
       </form>
     </Container>
   );
