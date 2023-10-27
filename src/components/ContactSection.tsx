@@ -12,11 +12,11 @@ function ContactSection() {
     <section id="contact" className="my-10">
       <Container>
         <div className="flex w-full flex-col">
-          <div className="header flex flex-col items-center justify-center p-10">
+          <div className="header flex flex-col items-center justify-center gap-3 p-10">
             <p className="text-sm font-light text-slate-500">
               Having Question?
             </p>
-            <h1 className="text-3xl font-bold">CONTACT US</h1>
+            <h1 className="text-3xl font-extrabold">CONTACT US</h1>
           </div>
           <div className="body flex w-full items-center justify-center">
             <Details />
