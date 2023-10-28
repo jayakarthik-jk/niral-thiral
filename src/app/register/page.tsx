@@ -18,6 +18,7 @@ export default function RegisterPage() {
             width={400}
             height={400}
             alt="logo"
+            priority
           />
           <h1 className="text-2xl font-bold">Event Registration Form</h1>
         </div>

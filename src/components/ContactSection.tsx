@@ -71,18 +71,18 @@ const Email = ({ className }: { className?: string }) => (
 
 const Details = () => {
   return (
-    <div className="left-details flex w-full flex-wrap gap-5">
-      <div className="flex flex-grow items-center justify-center gap-3">
-        <span className="text-sm text-slate-600">Address: </span>
-        <h2 className="font-bold">OMR, Kazhipattur</h2>
+    <div className="left-details flex w-full flex-wrap items-center justify-center gap-5">
+      <div className="flex flex-col gap-1">
+        <span className="text-xs text-slate-600">Address: </span>
+        <h2 className="text-sm">OMR, Kazhipattur</h2>
       </div>
-      <div className="flex flex-grow items-center justify-center gap-3">
-        <span className="text-sm text-slate-600">Mobile: </span>
-        <h2 className="font-bold">9080388158</h2>
+      <div className="flex flex-col gap-1">
+        <span className="text-xs text-slate-600">Mobile: </span>
+        <h2 className="text-sm">9080388158</h2>
       </div>
-      <div className="flex flex-grow items-center justify-center gap-3">
-        <span className="text-sm text-slate-600">Email: </span>
-        <h2 className="font-bold">testmail@gmail.com</h2>
+      <div className="flex flex-col gap-1">
+        <span className="text-xs text-slate-600">Email: </span>
+        <h2 className="text-sm">testmail@gmail.com</h2>
       </div>
     </div>
   );
