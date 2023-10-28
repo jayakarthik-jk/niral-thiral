@@ -24,9 +24,12 @@ export const usersRouter = createTRPCRouter({
         where: eq(users.id, userId),
       });
     }),
-  getUserByIdMutation: publicProcedure
-    .input(z.object({ userId: idSchema }))
-    .mutation(async ({ input: { userId }, ctx: { db } }) => {
+  getUserByIdOrUndefined: publicProcedure
+    .input(z.object({ userId: idSchema.optional() }))
+    .query(async ({ input: { userId }, ctx: { db } }) => {
+      if (!userId) {
+        return;
+      }
       return await db.query.users.findFirst({
         where: eq(users.id, userId),
       });

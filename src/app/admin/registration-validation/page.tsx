@@ -1,39 +1,37 @@
 "use client";
 
 import Container from "@/components/Container";
-import { useState } from "react";
 import { api } from "@/trpc/react";
-import { type users } from "@/server/db/schema";
-import IdScanner from "@/components/IdScanner";
+import useIdScanner from "@/hooks/useIdScanner";
 
 export default function RegistrationValidation() {
-  const [user, setUser] = useState<users>();
-  const userApi = api.users.getUserByIdMutation.useMutation();
-
-  function successCallback(id: string) {
-    userApi
-      .mutateAsync({ userId: Number(id) })
-      .then((user) => {
-        setUser(user);
-      })
-      .catch(console.log);
-  }
+  const scanner = useIdScanner();
+  const userApi = api.users.getUserByIdOrUndefined.useQuery({
+    userId: scanner.state === "success" ? scanner.id : undefined,
+  });
 
   return (
     <Container>
       <div>
-        <IdScanner onSucess={successCallback} />
-        {/* display the users informations */}
-        {user && (
+        {scanner.Component}
+        {scanner.state === "error" && (
           <div>
-            <div>id - {user.id}</div>
-            <div>name - {user.name}</div>
-            <div>gender - {user.gender}</div>
-            <div>email - {user.email}</div>
-            <div>phone - {user.college}</div>
-            <div>department - {user.department}</div>
-            <div>year - {user.year}</div>
-            <div>contact - {user.contact}</div>
+            {/* scanner error */}
+            <div>{scanner.error}</div>
+          </div>
+        )}
+        {/* display the users informations */}
+        {userApi.isLoading && <div>Loading...</div>}
+        {userApi.data && (
+          <div>
+            <div>id - {userApi.data.id}</div>
+            <div>name - {userApi.data.name}</div>
+            <div>gender - {userApi.data.gender}</div>
+            <div>email - {userApi.data.email}</div>
+            <div>phone - {userApi.data.college}</div>
+            <div>department - {userApi.data.department}</div>
+            <div>year - {userApi.data.year}</div>
+            <div>contact - {userApi.data.contact}</div>
           </div>
         )}
       </div>
