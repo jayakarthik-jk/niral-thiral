@@ -8,15 +8,15 @@ import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   return (
-    <nav className="sticky top-0 z-50 w-full bg-white/40 py-5 shadow-lg backdrop-blur-lg">
-      <Container>
+    <nav className="sticky top-0 z-[999] w-full bg-white/40 py-3 shadow-lg backdrop-blur-lg">
+      <Container className="">
         <div className="flex w-full items-center justify-between">
           <div className="left flex items-center justify-center gap-2">
             <Image
               className="ml-5 w-72 md:ml-0 md:w-96"
               src="/logo.png"
               width={400}
-              height={400}
+              height={70}
               alt="logo"
             />
           </div>
@@ -30,7 +30,7 @@ export default function Navbar() {
             <NavItem href="#sponsers" variant="link">
               Sponsers
             </NavItem>
-            <NavItem href="/register" variant="default">
+            <NavItem href="/register" variant="default" className="mx-3">
               Register Now
             </NavItem>
           </div>
@@ -62,6 +62,7 @@ export default function Navbar() {
 export type ItemProps = {
   children: React.ReactNode;
   href: string;
+  className?: string;
   variant:
     | "link"
     | "default"
@@ -73,11 +74,20 @@ export type ItemProps = {
     | undefined;
 };
 
-export const NavItem: FC<ItemProps> = ({ children, href, variant }) => {
+export const NavItem: FC<ItemProps> = ({
+  children,
+  href,
+  variant,
+  className,
+}) => {
   const router = useRouter();
 
   return (
-    <Button variant={variant} onClick={() => router.push(href)}>
+    <Button
+      variant={variant}
+      onClick={() => router.push(href)}
+      className={className}
+    >
       {children}
     </Button>
   );

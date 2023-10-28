@@ -4,8 +4,12 @@ import Counter from "./Counter";
 
 export default function HeroSection() {
   return (
-    <section id="hero" className="relative flex h-[70vh] bg-cover bg-no-repeat">
-      <Container className="flex-col items-center justify-center gap-10 bg-[url(/bg.jpg)] bg-cover">
+    <section
+      id="hero"
+      className="relative flex h-[80vh] bg-[url(/bg.jpg)] bg-cover"
+    >
+      <div className="absolute h-full w-full bg-gradient-to-b from-transparent from-50% to-white"></div>
+      <Container className="flex-col items-center justify-center gap-10">
         <Logo />
         <Counter />
       </Container>

@@ -29,7 +29,7 @@ const Counter = () => {
   }, []);
 
   return (
-    <div className="counter flex w-full items-center justify-center gap-2 rounded-md text-2xl md:gap-5 md:text-6xl">
+    <div className="counter z-10 flex w-full items-center justify-center gap-2 rounded-md text-2xl md:gap-5 md:text-6xl">
       <ClockTile digits={days} type={"Days"} />
       <ClockTile digits={hours} type={"Hours"} />
       <ClockTile digits={minutes} type={"Minutes"} />
