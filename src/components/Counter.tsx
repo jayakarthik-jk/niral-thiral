@@ -29,7 +29,7 @@ const Counter = () => {
   }, []);
 
   return (
-    <div className="counter flex w-full items-center justify-center gap-3 rounded-md text-2xl md:gap-5 md:p-5 md:text-6xl">
+    <div className="counter flex w-full items-center justify-center gap-2 rounded-md text-2xl md:gap-5 md:text-6xl">
       <ClockTile digits={days} type={"Days"} />
       <ClockTile digits={hours} type={"Hours"} />
       <ClockTile digits={minutes} type={"Minutes"} />
@@ -45,7 +45,7 @@ interface ClockTileProps {
 
 const ClockTile: FC<ClockTileProps> = ({ digits, type }) => {
   return (
-    <p className="counter-tile flex w-56 max-w-[100px] flex-col items-center justify-center rounded-md border bg-white p-5 text-3xl shadow-sm">
+    <p className="counter-tile flex aspect-square h-full max-w-[100px] flex-col items-center justify-center rounded-md border bg-white p-3 text-3xl shadow-sm md:p-5">
       <span className="font-extrabold">
         {digits < 10 ? "0" + digits : digits}
       </span>
