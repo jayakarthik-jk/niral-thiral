@@ -55,7 +55,7 @@ export const createTRPCContext = (opts: { req: NextRequest }) => {
   // Fetch stuff that depends on the request
 
   return createInnerTRPCContext({
-    headers: opts.req.headers as Headers,
+    headers: opts.req.headers,
   });
 };
 
