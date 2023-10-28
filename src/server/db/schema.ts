@@ -21,11 +21,14 @@ import { z } from "zod";
 
 // ******************  Schema  ****************** //
 
+export const genders = ["male", "female", "other"] as const;
+export type genders = (typeof genders)[number];
+
 export const users = pgTable("user", {
   id: serial("id").notNull().primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull(),
-  gender: text("gender", { enum: ["male", "female", "other"] }).notNull(),
+  gender: text("gender", { enum: genders }).notNull(),
   college: text("college").notNull(),
   year: integer("year").notNull(),
   department: text("department").notNull(),
