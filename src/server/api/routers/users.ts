@@ -24,6 +24,17 @@ export const usersRouter = createTRPCRouter({
         where: eq(users.id, userId),
       });
     }),
+  getUserByIdOrUndefined: publicProcedure
+    .input(z.object({ userId: idSchema.optional() }))
+    .query(async ({ input: { userId }, ctx: { db } }) => {
+      if (!userId) {
+        return;
+      }
+      return await db.query.users.findFirst({
+        where: eq(users.id, userId),
+      });
+    }),
+
   getFoodIssuedStatus: publicProcedure
     .input(z.object({ userId: idSchema }))
     .query(async ({ input: { userId }, ctx: { db } }) => {

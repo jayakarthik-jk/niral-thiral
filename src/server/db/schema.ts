@@ -38,6 +38,7 @@ export const users = pgTable("user", {
   foodIssued: boolean("foodIssued").$default(() => false),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
 });
+export type users = typeof users.$inferSelect;
 
 export const insertUserSchema = createInsertSchema(users);
 
