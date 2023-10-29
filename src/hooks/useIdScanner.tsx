@@ -1,6 +1,7 @@
-import { Html5QrcodeScanner } from "html5-qrcode";
-import { useEffect, useState } from "react";
+"use client";
 
+import { Html5QrcodeScanner } from "html5-qrcode";
+import { useState } from "react";
 type ScannerState =
   | {
       // loading state
@@ -23,19 +24,20 @@ type ScannerState =
  *
  * Don't forget to add the Component to the page
  */
-const useIdScanner = () => {
+const useIdScanner = (id = "reader") => {
   const [scannerState, setScannerState] = useState<ScannerState>({
     state: "scanning",
   });
 
-  useEffect(() => {
+  const render = () => {
     const html5QrcodeScanner = new Html5QrcodeScanner(
-      "reader",
+      id,
       { fps: 10, qrbox: { width: 250, height: 250 } },
       false,
     );
+    void html5QrcodeScanner.clear();
     html5QrcodeScanner.render(
-      (id) => {
+      (id: string) => {
         if (typeof id !== "string" || id.length === 0 || isNaN(Number(id))) {
           return setScannerState({
             state: "error",
@@ -46,8 +48,9 @@ const useIdScanner = () => {
           state: "success",
           id: Number(id),
         });
+        void html5QrcodeScanner.clear();
       },
-      (error) => {
+      (error: string) => {
         setScannerState({
           state: "error",
           error,
@@ -55,11 +58,12 @@ const useIdScanner = () => {
         console.error(error);
       },
     );
-  }, []);
+  };
 
   return {
     ...scannerState,
-    Component: <div id="reader" />,
+    Component: <div id={id} />,
+    render,
   };
 };
 

@@ -3,6 +3,7 @@
 import Container from "@/components/Container";
 import { api } from "@/trpc/react";
 import useIdScanner from "@/hooks/useIdScanner";
+import { Button } from "@/components/ui/button";
 
 export default function RegistrationValidation() {
   const scanner = useIdScanner();
@@ -20,6 +21,9 @@ export default function RegistrationValidation() {
             <div>{scanner.error}</div>
           </div>
         )}
+
+        <Button onClick={scanner.render}>open scanner</Button>
+
         {/* display the users informations */}
         {userApi.isLoading && <div>Loading...</div>}
         {userApi.data && (
