@@ -6,11 +6,11 @@ export default function EventSection() {
   return (
     <section
       id="events"
-      className="flex min-h-[80vh] bg-gradient-to-b from-white via-slate-400/70 via-70% to-slate-300 pb-10 pt-32"
+      className="flex min-h-[80vh] bg-gradient-to-b from-white via-slate-400/70 to-slate-300 pb-10 pt-20 md:pt-32"
     >
       <Container>
         <div className="grid w-full grid-rows-[8] lg:grid-rows-6">
-          <h1 className="title my-7 flex items-center justify-center stroke-black text-3xl font-bold text-slate-700 lg:row-span-1 lg:m-0">
+          <h1 className="title my-7 flex items-center justify-center text-3xl font-bold text-slate-700 lg:row-span-1 lg:m-0">
             Events
           </h1>
           <div className="days flex flex-col px-5 pb-5 lg:row-span-5 lg:grid lg:grid-cols-3 lg:grid-rows-3">
@@ -18,7 +18,7 @@ export default function EventSection() {
             <DayTile day="Day 2" title="TECHATHON" />
             <DayTile day="Day 3" title="TECHNOKRATZ" />
           </div>
-          <div className="row-span-1 mx-auto flex w-full max-w-5xl flex-col items-center justify-center gap-10 px-5 py-5 text-center text-base text-black lg:py-16">
+          <div className="row-span-1 mx-auto flex w-full max-w-5xl flex-col items-center justify-center gap-10 px-5 py-5 text-center text-base font-medium text-slate-700 lg:py-16">
             <p className="ml-0 mr-auto max-w-2xl rounded-lg border bg-gradient-to-br from-white/30 to-white/20 p-5 shadow-sm backdrop-blur-lg lg:text-left">
               NIRAL THIRAL is an exciting three-day tech carnival designed to
               foster a spirit of innovation, creativity, and technological
@@ -71,7 +71,7 @@ function DayTile({
         <span className="text-sm">{day}</span>
         <h1 className="text-3xl font-bold">{title}</h1>
         <span className="my-3 text-xs font-extralight">
-          click to know more {"->"}
+          click to know more &rarr;
         </span>
       </div>
     </div>

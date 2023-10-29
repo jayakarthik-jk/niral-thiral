@@ -5,18 +5,9 @@ function ContactSection() {
   return (
     <section id="contact" className="my-10 min-h-[250px]">
       <Container>
-        <div className="flex w-full flex-col">
-          <div className="header flex flex-col items-center justify-center gap-3 p-10">
-            <p className="text-sm font-light text-slate-500">
-              Having Question?
-            </p>
-            <h1 className="text-2xl font-extrabold">CONTACT US</h1>
-            <div className="socials flex gap-3">
-              <Insta className="w-7" />
-              <Email className="w-7" />
-            </div>
-          </div>
-          <div className="body flex w-full items-center justify-center">
+        <div className="flex w-full flex-row justify-around md:flex-col">
+          <Socials />
+          <div className="body flex items-center justify-center">
             <Details />
           </div>
         </div>
@@ -24,6 +15,38 @@ function ContactSection() {
     </section>
   );
 }
+
+const Socials = () => {
+  return (
+    <div className="header flex flex-col items-center justify-center gap-3 md:p-10">
+      <p className="text-sm font-light text-slate-500">Having Question?</p>
+      <h1 className="text-center text-2xl font-extrabold">CONTACT US</h1>
+      <div className="socials flex gap-3">
+        <Insta className="w-7" />
+        <Email className="w-7" />
+      </div>
+    </div>
+  );
+};
+
+const Details = () => {
+  return (
+    <div className="left-details flex w-fit flex-col items-start justify-center gap-5 md:flex-row">
+      <div className="flex flex-col gap-1">
+        <span className="text-xs text-slate-600">Address: </span>
+        <h2 className="text-sm">OMR, Kazhipattur</h2>
+      </div>
+      <div className="flex flex-col gap-1">
+        <span className="text-xs text-slate-600">Mobile: </span>
+        <h2 className="text-sm">9080388158</h2>
+      </div>
+      <div className="flex flex-col gap-1">
+        <span className="text-xs text-slate-600">Email: </span>
+        <h2 className="text-sm">testmail@gmail.com</h2>
+      </div>
+    </div>
+  );
+};
 
 const Insta = ({ className }: { className?: string }) => (
   <a href="https://www.instagram.com/_niral_thiral_2k23">
@@ -68,24 +91,5 @@ const Email = ({ className }: { className?: string }) => (
     />
   </a>
 );
-
-const Details = () => {
-  return (
-    <div className="left-details flex w-full flex-wrap items-center justify-center gap-5">
-      <div className="flex flex-col gap-1">
-        <span className="text-xs text-slate-600">Address: </span>
-        <h2 className="text-sm">OMR, Kazhipattur</h2>
-      </div>
-      <div className="flex flex-col gap-1">
-        <span className="text-xs text-slate-600">Mobile: </span>
-        <h2 className="text-sm">9080388158</h2>
-      </div>
-      <div className="flex flex-col gap-1">
-        <span className="text-xs text-slate-600">Email: </span>
-        <h2 className="text-sm">testmail@gmail.com</h2>
-      </div>
-    </div>
-  );
-};
 
 export default ContactSection;

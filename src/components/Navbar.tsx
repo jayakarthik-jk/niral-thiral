@@ -38,7 +38,7 @@ export default function Navbar() {
             <PopoverTrigger className="right-ham flex aspect-square w-fit items-center justify-center rounded-full p-3 transition-all hover:bg-slate-400/10 lg:hidden">
               <HamIcon />
             </PopoverTrigger>
-            <PopoverContent className="flex w-fit flex-col items-start gap-3">
+            <PopoverContent className="z-[999] flex w-fit flex-col items-start gap-3">
               <NavItem href="#about" variant="link">
                 About
               </NavItem>
@@ -87,6 +87,7 @@ export const NavItem: FC<ItemProps> = ({
       variant={variant}
       onClick={() => router.push(href)}
       className={className}
+      // asChild
     >
       {children}
     </Button>

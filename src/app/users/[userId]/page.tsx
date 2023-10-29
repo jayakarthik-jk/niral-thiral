@@ -1,5 +1,6 @@
 import QRCode from "@/components/QRCode";
 import { api } from "@/trpc/server";
+import { Loader2 } from "lucide-react";
 import { notFound } from "next/navigation";
 
 interface PageProps {
