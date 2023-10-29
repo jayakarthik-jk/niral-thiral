@@ -47,7 +47,7 @@ export const usersRouter = createTRPCRouter({
     }),
   updateFoodIssuedStatus: publicProcedure
     .input(z.object({ userId: idSchema }))
-    .query(async ({ input: { userId }, ctx: { db } }) => {
+    .mutation(async ({ input: { userId }, ctx: { db } }) => {
       return await db
         .update(users)
         .set({ foodIssued: true })

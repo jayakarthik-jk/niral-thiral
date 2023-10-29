@@ -51,6 +51,12 @@ const useIdScanner = (id = "reader") => {
         void html5QrcodeScanner.clear();
       },
       (error: string) => {
+        if (typeof error !== "string") {
+          return setScannerState({
+            state: "error",
+            error: "Invalid QR Code",
+          });
+        }
         setScannerState({
           state: "error",
           error,
