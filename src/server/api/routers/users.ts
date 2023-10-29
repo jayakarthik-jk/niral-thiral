@@ -28,7 +28,7 @@ export const usersRouter = createTRPCRouter({
     .input(z.object({ userId: idSchema.optional() }))
     .query(async ({ input: { userId }, ctx: { db } }) => {
       if (!userId) {
-        return;
+        return null;
       }
       return await db.query.users.findFirst({
         where: eq(users.id, userId),
