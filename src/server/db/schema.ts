@@ -31,7 +31,7 @@ export const users = pgTable("user", {
   id: serial("id").notNull().primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
-  userSlug: text("contact").notNull().unique(),
+  userSlug: text("userSlug").notNull().unique(),
   gender: text("gender", { enum: genders }).notNull(),
   college: text("college").notNull(),
   year: text("year", { enum: years }).notNull(),

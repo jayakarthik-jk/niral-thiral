@@ -38,11 +38,14 @@ export const eventsRouter = createTRPCRouter({
       }),
     )
     .query(async ({ input: { id }, ctx: { db } }) => {
-      return await db.query.events.findFirst({ where: eq(events.id, id) });
+      const event = await db.query.events.findFirst({
+        where: eq(events.id, id),
+      });
+      return event ?? null;
     }),
   createEvent: protectedProcedure
     .input(insertEventSchema)
     .mutation(async ({ input, ctx: { db } }) => {
-      return db.insert(events).values(input);
+      await db.insert(events).values(input);
     }),
 });

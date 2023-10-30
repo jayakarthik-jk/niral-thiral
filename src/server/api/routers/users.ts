@@ -20,35 +20,38 @@ export const usersRouter = createTRPCRouter({
   getUserBySlug: publicProcedure
     .input(z.object({ userSlug: z.string() }))
     .query(async ({ input: { userSlug }, ctx: { db } }) => {
-      return await db.query.users.findFirst({
+      const user = await db.query.users.findFirst({
         where: eq(users.userSlug, userSlug),
       });
+      return user ?? null;
     }),
   getUserById: publicProcedure
     .input(z.object({ userId: idSchema.optional() }))
     .query(async ({ input: { userId }, ctx: { db } }) => {
       if (!userId) {
-        return undefined;
+        return null;
       }
-      return await db.query.users.findFirst({
+      const user = await db.query.users.findFirst({
         where: eq(users.id, userId),
       });
+      return user ?? null;
     }),
 
   getFoodIssuedStatus: publicProcedure
     .input(z.object({ userId: idSchema }))
     .query(async ({ input: { userId }, ctx: { db } }) => {
-      return await db.query.users.findFirst({
+      const user = await db.query.users.findFirst({
         where: eq(users.id, userId),
         columns: {
           isFoodIssued: true,
         },
       });
+      return user ?? null;
     }),
   updateFoodIssuedStatus: publicProcedure
     .input(z.object({ userId: idSchema }))
     .mutation(async ({ input: { userId }, ctx: { db } }) => {
-      return await db
+      await db
         .update(users)
         .set({ isFoodIssued: true })
         .where(eq(users.id, userId));
@@ -57,9 +60,6 @@ export const usersRouter = createTRPCRouter({
   updatePaymentStatus: publicProcedure
     .input(z.object({ userId: idSchema }))
     .mutation(async ({ input: { userId }, ctx: { db } }) => {
-      return await db
-        .update(users)
-        .set({ ispaid: true })
-        .where(eq(users.id, userId));
+      await db.update(users).set({ ispaid: true }).where(eq(users.id, userId));
     }),
 });
