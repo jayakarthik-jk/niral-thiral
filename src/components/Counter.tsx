@@ -1,6 +1,8 @@
 "use client";
 
 import { type FC, useEffect, useState } from "react";
+import { Button } from "./ui/button";
+import Link from "next/link";
 
 const End = new Date("2023-11-02").valueOf();
 
@@ -29,11 +31,18 @@ const Counter = () => {
   }, []);
 
   return (
-    <div className="counter z-10 flex w-full items-center justify-center gap-2 rounded-md text-2xl md:gap-5 md:text-6xl">
-      <ClockTile digits={days} type={"Days"} />
-      <ClockTile digits={hours} type={"Hours"} />
-      <ClockTile digits={minutes} type={"Minutes"} />
-      <ClockTile digits={seconds} type={"Seconds"} />
+    <div className="z-10 text-center">
+      <div className="counter flex w-full items-center justify-center gap-2 rounded-md text-2xl md:gap-5 md:text-6xl">
+        <ClockTile digits={days} type={"Days"} />
+        <ClockTile digits={hours} type={"Hours"} />
+        <ClockTile digits={minutes} type={"Minutes"} />
+        <ClockTile digits={seconds} type={"Seconds"} />
+      </div>
+      <Button size={"lg"} asChild>
+        <Link href="/register" className="z-10 my-5 lg:hidden">
+          Register Now
+        </Link>
+      </Button>
     </div>
   );
 };
