@@ -7,8 +7,13 @@ import { Button } from "@/components/ui/button";
 
 export default function RegistrationValidation() {
   const scanner = useIdScanner();
-  const userApi = api.users.getUserByIdOrUndefined.useQuery({
+  const userApi = api.users.getUserById.useQuery({
     userId: scanner.state === "success" ? scanner.id : undefined,
+  });
+  const updatePaymentStatus = api.users.updatePaymentStatus.useMutation({
+    onSuccess: () => {
+      void userApi.refetch();
+    },
   });
 
   return (
@@ -38,6 +43,21 @@ export default function RegistrationValidation() {
             <div>department - {userApi.data.department}</div>
             <div>year - {userApi.data.year}</div>
             <div>contact - {userApi.data.contact}</div>
+            <div>payment status - {userApi.data.ispaid}</div>
+            {!userApi.data.ispaid && (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  if (userApi.data) {
+                    void updatePaymentStatus.mutateAsync({
+                      userId: userApi.data.id,
+                    });
+                  }
+                }}
+              >
+                Update payment status
+              </Button>
+            )}
           </div>
         )}
       </div>

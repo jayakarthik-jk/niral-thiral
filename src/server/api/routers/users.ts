@@ -11,24 +11,24 @@ export const usersRouter = createTRPCRouter({
       const user = await db
         .insert(users)
         .values(input)
-        .returning({ id: users.id });
-      if (!user[0]?.id) {
+        .returning({ id: users.id, userSlug: users.userSlug });
+      if (!user[0]) {
         throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       }
-      return user[0].id;
+      return user[0];
     }),
-  getUserById: publicProcedure
-    .input(z.object({ userId: idSchema }))
-    .query(async ({ input: { userId }, ctx: { db } }) => {
+  getUserBySlug: publicProcedure
+    .input(z.object({ userSlug: z.string() }))
+    .query(async ({ input: { userSlug }, ctx: { db } }) => {
       return await db.query.users.findFirst({
-        where: eq(users.id, userId),
+        where: eq(users.userSlug, userSlug),
       });
     }),
-  getUserByIdOrUndefined: publicProcedure
+  getUserById: publicProcedure
     .input(z.object({ userId: idSchema.optional() }))
     .query(async ({ input: { userId }, ctx: { db } }) => {
       if (!userId) {
-        return null;
+        return undefined;
       }
       return await db.query.users.findFirst({
         where: eq(users.id, userId),
@@ -41,7 +41,7 @@ export const usersRouter = createTRPCRouter({
       return await db.query.users.findFirst({
         where: eq(users.id, userId),
         columns: {
-          foodIssued: true,
+          isFoodIssued: true,
         },
       });
     }),
@@ -50,7 +50,16 @@ export const usersRouter = createTRPCRouter({
     .mutation(async ({ input: { userId }, ctx: { db } }) => {
       return await db
         .update(users)
-        .set({ foodIssued: true })
+        .set({ isFoodIssued: true })
+        .where(eq(users.id, userId));
+    }),
+
+  updatePaymentStatus: publicProcedure
+    .input(z.object({ userId: idSchema }))
+    .mutation(async ({ input: { userId }, ctx: { db } }) => {
+      return await db
+        .update(users)
+        .set({ ispaid: true })
         .where(eq(users.id, userId));
     }),
 });

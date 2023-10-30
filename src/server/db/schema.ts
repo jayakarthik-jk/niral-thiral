@@ -24,18 +24,22 @@ import { z } from "zod";
 export const genders = ["male", "female", "other"] as const;
 export type genders = (typeof genders)[number];
 
+export const years = ["I", "II", "III", "IV"] as const;
+export type years = (typeof years)[number];
+
 export const users = pgTable("user", {
   id: serial("id").notNull().primaryKey(),
   name: text("name").notNull(),
-  email: text("email").notNull(),
+  email: text("email").notNull().unique(),
+  userSlug: text("contact").notNull().unique(),
   gender: text("gender", { enum: genders }).notNull(),
   college: text("college").notNull(),
-  year: integer("year").notNull(),
+  year: text("year", { enum: years }).notNull(),
   department: text("department").notNull(),
   contact: text("contact").notNull(),
-
   role: text("role", { enum: ["student", "faculty"] }).default("student"),
-  foodIssued: boolean("foodIssued").$default(() => false),
+  isFoodIssued: boolean("isFoodIssued").$default(() => false),
+  ispaid: boolean("isPaid").$default(() => false),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
 });
 export type users = typeof users.$inferSelect;

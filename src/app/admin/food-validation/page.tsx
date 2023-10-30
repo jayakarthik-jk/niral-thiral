@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 export default function FoodValidation() {
   const scanner = useIdScanner();
-  const userApi = api.users.getUserByIdOrUndefined.useQuery({
+  const userApi = api.users.getUserById.useQuery({
     userId: scanner.state === "success" ? scanner.id : undefined,
   });
   const updateFoodStatusApi = api.users.updateFoodIssuedStatus.useMutation({
@@ -35,7 +35,7 @@ export default function FoodValidation() {
         )}
         {userApi.data && scanner.state === "success" && (
           <div>
-            {userApi.data.foodIssued ? (
+            {userApi.data.isFoodIssued ? (
               <h1>Food issued</h1>
             ) : (
               <Button

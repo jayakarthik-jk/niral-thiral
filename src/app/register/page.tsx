@@ -1,16 +1,17 @@
 "use client";
 import Container from "@/components/Container";
+import SelectMenu from "@/components/SelectMenu";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { cn } from "@/lib/utils";
-import { type genders } from "@/server/db/schema";
+import { years, type genders } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, type FC } from "react";
 import { z } from "zod";
+import slugify from "slugify";
+import InputField from "./InputField";
 
 const formSchema = z.object({
   username: z.object({ value: z.string().trim().min(1).max(255) }),
@@ -18,7 +19,6 @@ const formSchema = z.object({
   contact: z.object({ value: z.string().length(10) }),
   college: z.object({ value: z.string().trim().min(1).max(255) }),
   department: z.object({ value: z.string().trim().min(2) }),
-  year: z.object({ value: z.string().trim().length(1) }),
 });
 interface FormErrorType {
   username?: string[] | undefined;
@@ -26,7 +26,6 @@ interface FormErrorType {
   contact?: string[] | undefined;
   college?: string[] | undefined;
   department?: string[] | undefined;
-  year?: string[] | undefined;
   serverError?: boolean | undefined;
 }
 
@@ -34,6 +33,7 @@ export default function RegisterPage() {
   const [gender, setGender] = useState<genders>("male");
   const [error, setError] = useState<FormErrorType | undefined>();
   const router = useRouter();
+  const [year, setYear] = useState<years>("I");
   const registerApi = api.users.createUser.useMutation();
 
   return (
@@ -48,16 +48,17 @@ export default function RegisterPage() {
           }
           const { data } = validationResult;
           try {
-            const useerId = await registerApi.mutateAsync({
+            const user = await registerApi.mutateAsync({
               name: data.username.value,
               college: data.college.value,
               contact: data.contact.value,
               department: data.department.value,
               email: data.email.value,
-              year: +data.year.value,
+              year,
               gender,
+              userSlug: slugify(`${data.username.value}-${data.email.value}`),
             });
-            return router.push(`/users/${useerId}`);
+            return router.push(`/users/${user.userSlug}`);
           } catch (error) {
             setError((oldError) => ({ ...oldError, serverError: true }));
           }
@@ -133,17 +134,11 @@ export default function RegisterPage() {
               }
             }}
           />
-          <InputField
-            label="Year of Study: "
-            className="w-full"
-            type="number"
-            name="year"
-            error={!!error?.year}
-            onChange={() => {
-              if (error?.year) {
-                setError({ ...error, year: undefined });
-              }
-            }}
+          <SelectMenu
+            value={year}
+            onChange={(value) => setYear(value as years)}
+            items={years.slice()}
+            label="Year"
           />
         </div>
         <Button
@@ -158,42 +153,6 @@ export default function RegisterPage() {
     </Container>
   );
 }
-
-interface InputFieldProps {
-  placeholder?: string;
-  label: string;
-  className?: string;
-  type?: "text" | "email" | "number";
-  name?: string;
-  error?: boolean;
-  value?: string;
-  onChange?: (newValue: string) => void;
-}
-
-const InputField: FC<InputFieldProps> = ({
-  className,
-  label,
-  placeholder,
-  type,
-  name,
-  error,
-  value,
-  onChange: handleChange,
-}) => {
-  return (
-    <Label className={cn(className, "flex flex-col gap-2")}>
-      {label}
-      <Input
-        placeholder={placeholder}
-        type={type}
-        name={name}
-        className={`${error ? "border-red-500" : ""}`}
-        value={value}
-        onChange={(e) => handleChange?.(e.target.value)}
-      />
-    </Label>
-  );
-};
 
 interface GenderProps {
   value: genders;

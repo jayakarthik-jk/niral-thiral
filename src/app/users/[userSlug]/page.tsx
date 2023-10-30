@@ -1,29 +1,25 @@
 import QRCode from "@/components/QRCode";
 import { api } from "@/trpc/server";
-import { Loader2 } from "lucide-react";
 import { notFound } from "next/navigation";
 
 interface PageProps {
   params: {
-    userId: string;
+    userSlug: string;
   };
 }
 
 export default async function UserQRCodePage({
-  params: { userId },
+  params: { userSlug },
 }: PageProps) {
-  if (isNaN(Number(userId))) {
-    notFound();
-  }
-  const user = await api.users.getUserById.query({
-    userId: Number(userId),
+  const user = await api.users.getUserBySlug.query({
+    userSlug,
   });
   if (user === undefined) {
     return notFound();
   }
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center">
-      <QRCode userId={userId} />
+      <QRCode userId={`${user.id}`} />
       {user.name} - {user.email}
     </div>
   );
