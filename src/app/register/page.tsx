@@ -56,8 +56,13 @@ export default function RegisterPage() {
               email: data.email.value,
               year,
               gender,
-              userSlug: slugify(`${data.username.value}-${data.email.value}`),
+              userSlug: slugify(
+                `${data.college.value}-${data.department.value}-${
+                  data.username.value
+                }-${Date.now()}`,
+              ),
             });
+            localStorage.setItem("user", user.userSlug);
             return router.push(`/users/${user.userSlug}`);
           } catch (error) {
             setError((oldError) => ({ ...oldError, serverError: true }));

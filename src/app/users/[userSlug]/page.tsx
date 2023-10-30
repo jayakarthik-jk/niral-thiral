@@ -14,6 +14,7 @@ export default async function UserQRCodePage({
   const user = await api.users.getUserBySlug.query({
     userSlug,
   });
+
   if (user === null) {
     return notFound();
   }

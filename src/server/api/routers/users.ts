@@ -23,6 +23,7 @@ export const usersRouter = createTRPCRouter({
       const user = await db.query.users.findFirst({
         where: eq(users.userSlug, userSlug),
       });
+
       return user ?? null;
     }),
   getUserById: publicProcedure
