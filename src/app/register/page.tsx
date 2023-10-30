@@ -12,6 +12,7 @@ import { useState, type FC } from "react";
 import { z } from "zod";
 import slugify from "slugify";
 import InputField from "./InputField";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const formSchema = z.object({
   username: z.object({ value: z.string().trim().min(1).max(255) }),
@@ -35,7 +36,7 @@ export default function RegisterPage() {
   const router = useRouter();
   const [year, setYear] = useState<years>("I");
   const registerApi = api.users.createUser.useMutation();
-
+  const [agree, setAgree] = useState(false);
   return (
     <Container className="min-h-screen bg-[url(/bg.jpg)] bg-cover px-0">
       <form
@@ -146,10 +147,21 @@ export default function RegisterPage() {
             label="Year"
           />
         </div>
+        <Label className="flex items-center gap-2">
+          <Checkbox
+            name="agree"
+            onCheckedChange={(checked) => setAgree(Boolean(checked))}
+          />
+          <div>
+            I acknowledge and agree to the registration fee of{" "}
+            <span className="font-bold">₹100</span>, payable upon my arrival at
+            the event venue.
+          </div>
+        </Label>
         <Button
           className="my-10"
           type="submit"
-          disabled={registerApi.isLoading}
+          disabled={registerApi.isLoading || !agree}
         >
           Register
         </Button>
