@@ -1,5 +1,5 @@
 import "@/styles/globals.css";
-
+import { Analytics } from "@vercel/analytics/react";
 import { Inter } from "next/font/google";
 import { headers } from "next/headers";
 
@@ -26,6 +26,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
         <TRPCReactProvider headers={headers()}>{children}</TRPCReactProvider>
+        <Analytics />
       </body>
     </html>
   );
