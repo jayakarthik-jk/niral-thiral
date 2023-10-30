@@ -144,7 +144,7 @@ export default function RegisterPage() {
             value={year}
             onChange={(value) => setYear(value as years)}
             items={years.slice()}
-            label="Year"
+            label="Year: "
           />
         </div>
         <Label className="flex items-center gap-2">

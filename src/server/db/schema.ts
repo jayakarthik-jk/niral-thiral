@@ -46,29 +46,22 @@ export type users = typeof users.$inferSelect;
 
 export const insertUserSchema = createInsertSchema(users);
 
-export const eventTypes = pgEnum("eventTypes", ["Technical", "NonTechnical"]);
-export type eventTypes = (typeof eventTypes.enumValues)[number];
-
-export const platforms = pgEnum("platforms", ["School", "College"]);
-export type platforms = (typeof platforms.enumValues)[number];
-
-export const events = pgTable("event", {
-  id: serial("id").notNull().primaryKey(),
-  title: text("title").notNull(),
-  description: text("description").notNull(),
-  type: eventTypes("type").notNull(),
-  platform: platforms("platform").notNull(),
-  membersPerTeam: integer("membersPerTeam").default(3),
-
-  // coordinators details
-  coordinatorName: text("coordinatorName").notNull(),
-  coordinatorContact: text("coordinatorContact").notNull(),
-  coordinatorEmail: text("coordinatorEmail").notNull(),
-
-  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
-});
-
-export const insertEventSchema = createInsertSchema(events);
+export const events = pgEnum("events", [
+  // technical
+  "Pa-Pre Trix",
+  "Dom Masters",
+  "Just a Terminal",
+  "Coding Chess",
+  "Code Decode",
+  "Relay Code",
+  // non technical
+  "XoX",
+  "Jill Junk Juk",
+  "Free Fire",
+  "BGMI",
+  "Connexion",
+  "Gully Cricket",
+]);
 
 export const registrations = pgTable(
   "registration",
@@ -76,13 +69,11 @@ export const registrations = pgTable(
     userId: integer("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    eventId: integer("eventId")
-      .notNull()
-      .references(() => events.id, { onDelete: "cascade" }),
+    event: events("event").notNull(),
     createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
   },
   (self) => ({
-    compoundKey: primaryKey(self.eventId, self.userId),
+    compoundKey: primaryKey(self.userId, self.event),
   }),
 );
 
