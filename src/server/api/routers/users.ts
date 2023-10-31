@@ -37,6 +37,14 @@ export const usersRouter = createTRPCRouter({
       });
       return user ?? null;
     }),
+  getUserByEmail: publicProcedure
+    .input(z.object({ email: z.string().email() }))
+    .query(async ({ input: { email }, ctx: { db } }) => {
+      const user = await db.query.users.findFirst({
+        where: eq(users.email, email),
+      });
+      return user ?? null;
+    }),
 
   getFoodIssuedStatus: publicProcedure
     .input(z.object({ userId: idSchema }))
