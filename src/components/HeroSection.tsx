@@ -6,7 +6,7 @@ export default function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative flex h-[80vh] bg-[url(/bg.jpg)] bg-cover"
+      className="relative flex h-[100vh] bg-[url(/bg.jpg)] bg-cover"
     >
       <div className="absolute h-full w-full bg-gradient-to-b from-transparent from-50% to-white"></div>
       <Container className="flex-col items-center justify-center gap-10">

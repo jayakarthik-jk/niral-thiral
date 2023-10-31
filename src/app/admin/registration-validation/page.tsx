@@ -43,7 +43,9 @@ export default function RegistrationValidation() {
               <div>department - {userApi.data.department}</div>
               <div>year - {userApi.data.year}</div>
               <div>contact - {userApi.data.contact}</div>
-              <div>payment status - {userApi.data.ispaid}</div>
+              <div>
+                payment status - {userApi.data.ispaid ? "Paid" : "Not paid"}
+              </div>
               {!userApi.data.ispaid && (
                 <Button
                   variant="outline"

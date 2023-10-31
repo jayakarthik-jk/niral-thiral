@@ -63,6 +63,9 @@ export const events = pgEnum("events", [
   "Gully Cricket",
 ]);
 
+export const platforms = pgEnum("platforms", ["School", "College"]);
+export type platforms = (typeof platforms.enumValues)[number];
+
 export const registrations = pgTable(
   "registration",
   {

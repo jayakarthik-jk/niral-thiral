@@ -1,6 +1,8 @@
 "use client";
 
 import { type FC, useEffect, useState } from "react";
+import { Button } from "./ui/button";
+import Link from "next/link";
 
 const End = new Date("2023-11-02").valueOf();
 
@@ -9,6 +11,11 @@ const Counter = () => {
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
+
+  let userSlug = null;
+  if (typeof localStorage !== "undefined") {
+    userSlug = localStorage.getItem("user");
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -29,11 +36,21 @@ const Counter = () => {
   }, []);
 
   return (
-    <div className="counter z-10 flex w-full items-center justify-center gap-2 rounded-md text-2xl md:gap-5 md:text-6xl">
-      <ClockTile digits={days} type={"Days"} />
-      <ClockTile digits={hours} type={"Hours"} />
-      <ClockTile digits={minutes} type={"Minutes"} />
-      <ClockTile digits={seconds} type={"Seconds"} />
+    <div className="z-10 flex w-full flex-col items-center justify-center">
+      <div className="counter flex w-full items-center justify-center gap-2 rounded-md text-2xl md:gap-5 md:text-6xl">
+        <ClockTile digits={days} type={"Days"} />
+        <ClockTile digits={hours} type={"Hours"} />
+        <ClockTile digits={minutes} type={"Minutes"} />
+        <ClockTile digits={seconds} type={"Seconds"} />
+      </div>
+      <Button size={"lg"} asChild>
+        <Link
+          href={userSlug ? `users/${userSlug}` : "/register"}
+          className="z-10 my-5 lg:hidden"
+        >
+          {userSlug ? "View Ticket" : "Register Now"}
+        </Link>
+      </Button>
     </div>
   );
 };
