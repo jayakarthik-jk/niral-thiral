@@ -46,7 +46,7 @@ export type users = typeof users.$inferSelect;
 
 export const insertUserSchema = createInsertSchema(users);
 
-export const events = pgEnum("events", [
+const eventsList = [
   // technical
   "Pa-Pre Trix",
   "Dom Masters",
@@ -61,7 +61,9 @@ export const events = pgEnum("events", [
   "BGMI",
   "Connexion",
   "Gully Cricket",
-]);
+] as const;
+export const events = pgEnum("events", eventsList);
+export type events = (typeof events.enumValues)[number];
 
 export const platforms = pgEnum("platforms", ["School", "College"]);
 export type platforms = (typeof platforms.enumValues)[number];

@@ -108,7 +108,6 @@ export default function RegisterPage() {
                 }-${Date.now()}`,
               ),
             });
-            localStorage.setItem("user", user.userSlug);
             return router.push(`/users/${user.userSlug}`);
           } catch (error) {
             setError((oldError) => ({ ...oldError, serverError: true }));

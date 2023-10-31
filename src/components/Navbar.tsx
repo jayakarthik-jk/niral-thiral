@@ -8,10 +8,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { useRouter } from "next/navigation";
 
 export default function Navbar() {
-  let userSlug = null;
-  if (typeof localStorage !== "undefined") {
-    userSlug = localStorage.getItem("user");
-  }
   return (
     <nav className="fixed left-0 top-0 z-[999] w-full bg-white/40 py-3 shadow-lg backdrop-blur-lg">
       <Container className="">
@@ -35,19 +31,9 @@ export default function Navbar() {
             <NavItem href="#sponsers" variant="link">
               Sponsers
             </NavItem>
-            {userSlug ? (
-              <NavItem
-                href={`users/${userSlug}`}
-                variant="link"
-                className="mx-3"
-              >
-                View Ticket
-              </NavItem>
-            ) : (
-              <NavItem href="/register" variant="default" className="mx-3">
-                Register Now
-              </NavItem>
-            )}
+            <NavItem href="/register" variant="default" className="mx-3">
+              Register Now
+            </NavItem>
           </div>
           <Popover>
             <PopoverTrigger className="right-ham flex aspect-square w-fit items-center justify-center rounded-full p-3 transition-all hover:bg-slate-400/10 lg:hidden">
@@ -63,19 +49,9 @@ export default function Navbar() {
               <NavItem href="#sponsers" variant="link">
                 Sponsers
               </NavItem>
-              {userSlug ? (
-                <NavItem
-                  href={`users/${userSlug}`}
-                  variant="link"
-                  className="mx-3"
-                >
-                  View Ticket
-                </NavItem>
-              ) : (
-                <NavItem href="/register" variant="default" className="mx-3">
-                  Register Now
-                </NavItem>
-              )}
+              <NavItem href="/register" variant="default" className="mx-3">
+                Register Now
+              </NavItem>
             </PopoverContent>
           </Popover>
         </div>
