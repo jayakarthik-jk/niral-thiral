@@ -11,7 +11,7 @@ export default function Navbar() {
   const userSlug = localStorage.getItem("user");
 
   return (
-    <nav className="sticky top-0 z-[999] w-full bg-white/40 py-3 shadow-lg backdrop-blur-lg">
+    <nav className="fixed left-0 top-0 z-[999] w-full bg-white/40 py-3 shadow-lg backdrop-blur-lg">
       <Container className="">
         <div className="flex w-full items-center justify-between">
           <div className="left flex items-center justify-center gap-2">
