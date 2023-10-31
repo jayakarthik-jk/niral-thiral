@@ -37,7 +37,7 @@ export const users = pgTable("user", {
   year: text("year", { enum: years }).notNull(),
   department: text("department").notNull(),
   contact: text("contact").notNull(),
-  role: text("role", { enum: ["student", "faculty"] }).default("student"),
+  paymentScreenshotUrl: text("paymentScreenshotUrl").unique(),
   isFoodIssued: boolean("isFoodIssued").$default(() => false),
   ispaid: boolean("isPaid").$default(() => false),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),

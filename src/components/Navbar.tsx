@@ -8,7 +8,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { useRouter } from "next/navigation";
 
 export default function Navbar() {
-  const userSlug = localStorage.getItem("user");
+  let userSlug = null;
+  if (typeof localStorage !== "undefined") {
+    userSlug = localStorage.getItem("user");
+  }
   return (
     <nav className="sticky top-0 z-[999] w-full bg-white/40 py-3 shadow-lg backdrop-blur-lg">
       <Container className="">

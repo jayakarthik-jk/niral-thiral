@@ -147,6 +147,24 @@ export default function RegisterPage() {
             label="Year: "
           />
         </div>
+        {/* <UploadButton
+            endpoint="imageUploader"
+            onClientUploadComplete={(res) => {
+              console.log("Files: ", res);
+              alert("Upload Completed");
+            }}
+            onUploadError={(error) => {
+              // Do something with the error.
+              alert(`ERROR! ${error.message}`);
+            }}
+            className="flex w-fit flex-row p-0"
+            appearance={{
+              button: {
+                scale: "0.8",
+                margin: "0px",
+              },
+            }}
+          /> */}
         <Label className="flex items-center gap-2">
           <Checkbox
             name="agree"
