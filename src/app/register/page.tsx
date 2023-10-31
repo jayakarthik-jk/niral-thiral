@@ -1,4 +1,5 @@
 "use client";
+
 import Container from "@/components/Container";
 import SelectMenu from "@/components/SelectMenu";
 import { Button } from "@/components/ui/button";
@@ -8,11 +9,18 @@ import { years, type genders } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState, type FC } from "react";
 import { z } from "zod";
 import slugify from "slugify";
 import InputField from "./InputField";
-import { Checkbox } from "@/components/ui/checkbox";
+import NativeQRCode from "react-qr-code";
+
+import type { FileWithPath } from "@uploadthing/react";
+import { useDropzone } from "@uploadthing/react/hooks";
+import { generateClientDropzoneAccept } from "uploadthing/client";
+
+import { useUploadThing } from "@/utils/uploadthing";
+import { type FC, useCallback, useState } from "react";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   username: z.object({ value: z.string().trim().min(1).max(255) }),
@@ -35,8 +43,39 @@ export default function RegisterPage() {
   const [error, setError] = useState<FormErrorType | undefined>();
   const router = useRouter();
   const [year, setYear] = useState<years>("I");
+
   const registerApi = api.users.createUser.useMutation();
-  const [agree, setAgree] = useState(false);
+
+  const [files, setFiles] = useState<File[]>([]);
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
+    console.log(acceptedFiles);
+    setFiles(acceptedFiles);
+  }, []);
+
+  const { startUpload, permittedFileInfo } = useUploadThing("imageUploader", {
+    onClientUploadComplete: () => {
+      console.log("uploaded successfully!");
+    },
+    onUploadError: () => {
+      console.log("error occurred while uploading");
+    },
+    onUploadBegin: () => {
+      console.log("upload has begun");
+    },
+  });
+
+  const fileTypes = permittedFileInfo?.config
+    ? Object.keys(permittedFileInfo?.config)
+    : [];
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: fileTypes ? generateClientDropzoneAccept(fileTypes) : undefined,
+  });
+
   return (
     <Container className="min-h-screen bg-[url(/bg.jpg)] bg-cover px-0">
       <form
@@ -47,14 +86,20 @@ export default function RegisterPage() {
           if (!validationResult.success) {
             return setError(validationResult.error.flatten().fieldErrors);
           }
+          setIsLoading(true);
           const { data } = validationResult;
           try {
+            const res = await startUpload(files);
+            setIsLoading(false);
+            const { url } = res![0]!;
+            console.log(url);
             const user = await registerApi.mutateAsync({
               name: data.username.value,
               college: data.college.value,
               contact: data.contact.value,
               department: data.department.value,
               email: data.email.value,
+              paymentScreenshotUrl: url,
               year,
               gender,
               userSlug: slugify(
@@ -147,39 +192,45 @@ export default function RegisterPage() {
             label="Year: "
           />
         </div>
-        {/* <UploadButton
-            endpoint="imageUploader"
-            onClientUploadComplete={(res) => {
-              console.log("Files: ", res);
-              alert("Upload Completed");
-            }}
-            onUploadError={(error) => {
-              // Do something with the error.
-              alert(`ERROR! ${error.message}`);
-            }}
-            className="flex w-fit flex-row p-0"
-            appearance={{
-              button: {
-                scale: "0.8",
-                margin: "0px",
-              },
-            }}
-          /> */}
-        <Label className="flex items-center gap-2">
-          <Checkbox
-            name="agree"
-            onCheckedChange={(checked) => setAgree(Boolean(checked))}
+        <div className="flex flex-col items-center pt-5 md:flex-row">
+          <NativeQRCode
+            size={100}
+            value="upi://pay?pa=mynameisrizwan35@oksbi&pn=Mohamed%20Rizwan&am=100.00&cu=INR&aid=uGICAgIC3rvWgVw"
+            className="h-full w-full max-w-[150px]"
           />
-          <div>
-            I acknowledge and agree to the registration fee of{" "}
-            <span className="font-bold">₹100</span>, payable upon my arrival at
-            the event venue.
+          <div className="m-5 min-w-[70%] space-y-3">
+            <p className="text-center text-sm font-bold md:text-left">
+              Pay ₹100 using this QR code and Upload a Screenshot of the
+              Payment.
+            </p>
+            <div
+              {...getRootProps()}
+              className="flex h-full cursor-pointer items-center justify-center border border-dashed p-5 text-center"
+            >
+              <input {...getInputProps()} />
+              {files.length === 0
+                ? "Click or Drop Picture here to Upload"
+                : "Click to Change image"}
+              {files.length > 0 && files[0]?.name}
+            </div>
           </div>
-        </Label>
+        </div>
+        {error?.serverError && (
+          <p className="text-center text-red-500">
+            An error occurred while registering. Please try again later.
+          </p>
+        )}
+        {(isLoading || registerApi.isLoading) && (
+          <div className="flex w-full flex-col items-center justify-center gap-2 p-5 text-slate-800">
+            <Loader2 className="animate-spin duration-700" />
+            {isLoading && "Uploading Image..."}
+            {registerApi.isLoading && "Adding Participant..."}
+          </div>
+        )}
         <Button
           className="my-10"
           type="submit"
-          disabled={registerApi.isLoading || !agree}
+          disabled={registerApi.isLoading}
         >
           Register
         </Button>
