@@ -77,6 +77,9 @@ const config = {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
+      minHeight: {
+        screen: "100svh",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
