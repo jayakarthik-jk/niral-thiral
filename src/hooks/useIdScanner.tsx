@@ -28,8 +28,14 @@ const useIdScanner = (id = "reader") => {
   const [scannerState, setScannerState] = useState<ScannerState>({
     state: "scanning",
   });
+  const clear = () => {
+    setScannerState({
+      state: "scanning",
+    });
+  };
 
   const render = () => {
+    clear();
     const html5QrcodeScanner = new Html5QrcodeScanner(
       id,
       { fps: 10, qrbox: { width: 250, height: 250 } },
@@ -70,6 +76,7 @@ const useIdScanner = (id = "reader") => {
     ...scannerState,
     Component: <div id={id} />,
     render,
+    clear,
   };
 };
 
