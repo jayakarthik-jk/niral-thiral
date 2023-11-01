@@ -12,11 +12,6 @@ const Counter = () => {
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
 
-  let userSlug = null;
-  if (typeof localStorage !== "undefined") {
-    userSlug = localStorage.getItem("user");
-  }
-
   useEffect(() => {
     const interval = setInterval(() => {
       const now = Date.now();
@@ -44,11 +39,8 @@ const Counter = () => {
         <ClockTile digits={seconds} type={"Seconds"} />
       </div>
       <Button size={"lg"} asChild>
-        <Link
-          href={userSlug ? `users/${userSlug}` : "/register"}
-          className="z-10 my-5 lg:hidden"
-        >
-          {userSlug ? "View Ticket" : "Register Now"}
+        <Link href="/register" className="z-10 my-5 lg:hidden">
+          Register Now
         </Link>
       </Button>
     </div>
