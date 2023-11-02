@@ -42,6 +42,14 @@ export default function Events() {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
+                <SelectLabel>Day 1</SelectLabel>
+                <SelectItem value="Bug Hunt">Bug Hunt</SelectItem>
+                <SelectItem value="Code Buzz">Code Buzz</SelectItem>
+                <SelectItem value="Idea Kick">Idea Kick</SelectItem>
+                <SelectItem value="Day 1 Free Fire">Day 1 Free Fire</SelectItem>
+              </SelectGroup>
+              <SelectSeparator />
+              <SelectGroup>
                 <SelectLabel>Technical</SelectLabel>
                 <SelectItem value="Pa-Pre Trix">Pa-Pre Trix</SelectItem>
                 <SelectItem value="Dom Masters">Dom Masters</SelectItem>

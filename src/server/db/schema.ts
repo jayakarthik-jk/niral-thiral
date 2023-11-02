@@ -47,6 +47,10 @@ export type users = typeof users.$inferSelect;
 export const insertUserSchema = createInsertSchema(users);
 
 const eventsList = [
+  "Bug Hunt",
+  "Code Buzz",
+  "Idea Kick",
+  "Day 1 Free Fire",
   // technical
   "Pa-Pre Trix",
   "Dom Masters",
