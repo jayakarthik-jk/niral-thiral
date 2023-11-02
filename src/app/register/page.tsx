@@ -194,7 +194,7 @@ export default function RegisterPage() {
         <div className="flex flex-col items-center pt-5 md:flex-row">
           <NativeQRCode
             size={100}
-            value="upi://pay?pa=mynameisrizwan35@oksbi&pn=Mohamed%20Rizwan&am=100.00&cu=INR&aid=uGICAgIC3rvWgVw"
+            value="upi://pay?pa=mskkaalam@okaxis&pn=Maheswari%20Venkateshwaran&am=100.00&cu=INR&aid=uGICAgIDQp8_nQg"
             className="h-full w-full max-w-[150px]"
           />
           <div className="m-5 min-w-[70%] space-y-3">
@@ -229,7 +229,7 @@ export default function RegisterPage() {
         <Button
           className="my-10"
           type="submit"
-          disabled={registerApi.isLoading}
+          disabled={registerApi.isLoading || isLoading}
         >
           Register
         </Button>

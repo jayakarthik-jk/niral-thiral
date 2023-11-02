@@ -42,7 +42,7 @@ const Details = () => {
       </div>
       <div className="flex flex-col gap-1">
         <span className="text-xs text-slate-600">Email: </span>
-        <h2 className="text-sm">testmail@gmail.com</h2>
+        <h2 className="text-sm">niralthiral.2k23@gmail.com</h2>
       </div>
     </div>
   );
