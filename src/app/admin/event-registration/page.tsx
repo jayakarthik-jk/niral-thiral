@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { events } from "@/server/db/schema";
+import { type events, parsedEvents } from "@/server/db/schema";
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { api } from "@/trpc/react";
@@ -42,31 +42,21 @@ export default function Events() {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Day 1</SelectLabel>
-                <SelectItem value="Bug Hunt">Bug Hunt</SelectItem>
-                <SelectItem value="Code Buzz">Code Buzz</SelectItem>
-                <SelectItem value="Idea Kick">Idea Kick</SelectItem>
-                <SelectItem value="Day 1 Free Fire">Day 1 Free Fire</SelectItem>
-              </SelectGroup>
-              <SelectSeparator />
-              <SelectGroup>
                 <SelectLabel>Technical</SelectLabel>
-                <SelectItem value="Pa-Pre Trix">Pa-Pre Trix</SelectItem>
-                <SelectItem value="Dom Masters">Dom Masters</SelectItem>
-                <SelectItem value="Just a Terminal">Just a Terminal</SelectItem>
-                <SelectItem value="Coding Chess">Coding Chess</SelectItem>
-                <SelectItem value="Code Decode">Code Decode</SelectItem>
-                <SelectItem value="Relay Code">Relay Code</SelectItem>
+                {parsedEvents.technical.map((event) => (
+                  <SelectItem key={event} value={event}>
+                    {event}
+                  </SelectItem>
+                ))}
               </SelectGroup>
               <SelectSeparator />
               <SelectGroup>
                 <SelectLabel>Non Technical</SelectLabel>
-                <SelectItem value="XoX">XoX</SelectItem>
-                <SelectItem value="Jill Junk Juk">Jill Junk Juk</SelectItem>
-                <SelectItem value="Free Fire">Free Fire</SelectItem>
-                <SelectItem value="BGMI">BGMI</SelectItem>
-                <SelectItem value="Connexion">Connexion</SelectItem>
-                <SelectItem value="Gully Cricket">Gully Cricket</SelectItem>
+                {parsedEvents.nonTechnical.map((event) => (
+                  <SelectItem key={event} value={event}>
+                    {event}
+                  </SelectItem>
+                ))}
               </SelectGroup>
             </SelectContent>
           </Select>

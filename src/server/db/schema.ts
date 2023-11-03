@@ -61,8 +61,12 @@ const eventsList = [
   "BGMI",
   "Connexion",
   "Gully Cricket",
-  "Lazer Maze"
+  "Lazer Maze",
 ] as const;
+export const parsedEvents = {
+  technical: eventsList.slice(0, 6),
+  nonTechnical: eventsList.slice(6),
+};
 export const events = pgEnum("events", eventsList);
 export type events = (typeof events.enumValues)[number];
 

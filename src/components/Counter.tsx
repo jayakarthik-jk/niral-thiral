@@ -16,6 +16,14 @@ const Counter = () => {
     const interval = setInterval(() => {
       const now = Date.now();
       const distance = End - now;
+      if (distance < 0) {
+        clearInterval(interval);
+        setDays(0);
+        setHours(0);
+        setMinutes(0);
+        setSeconds(0);
+        return;
+      }
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
       const hours = Math.floor(
         (distance % (1000 * 60 * 60 * 24)) / (60 * 60 * 1000),
