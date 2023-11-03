@@ -12,15 +12,10 @@ import { useRouter } from "next/navigation";
 import { z } from "zod";
 import slugify from "slugify";
 import InputField from "./InputField";
-import NativeQRCode from "react-qr-code";
 
-import type { FileWithPath } from "@uploadthing/react";
-import { useDropzone } from "@uploadthing/react/hooks";
-import { generateClientDropzoneAccept } from "uploadthing/client";
-
-import { useUploadThing } from "@/utils/uploadthing";
-import { type FC, useCallback, useState } from "react";
+import { type FC, useState } from "react";
 import { Loader2 } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const formSchema = z.object({
   username: z.object({ value: z.string().trim().min(1).max(255) }),
@@ -42,39 +37,10 @@ export default function RegisterPage() {
   const [gender, setGender] = useState<genders>("male");
   const [error, setError] = useState<FormErrorType | undefined>();
   const router = useRouter();
+  const [isAgreed, setAgreed] = useState(false);
   const [year, setYear] = useState<years>("I");
 
   const registerApi = api.users.createUser.useMutation();
-
-  const [files, setFiles] = useState<File[]>([]);
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
-    console.log(acceptedFiles);
-    setFiles(acceptedFiles);
-  }, []);
-
-  const { startUpload, permittedFileInfo } = useUploadThing("imageUploader", {
-    onClientUploadComplete: () => {
-      console.log("uploaded successfully!");
-    },
-    onUploadError: () => {
-      console.log("error occurred while uploading");
-    },
-    onUploadBegin: () => {
-      console.log("upload has begun");
-    },
-  });
-
-  const fileTypes = permittedFileInfo?.config
-    ? Object.keys(permittedFileInfo?.config)
-    : [];
-
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
-    accept: fileTypes ? generateClientDropzoneAccept(fileTypes) : undefined,
-  });
 
   return (
     <Container className="min-h-screen bg-[url(/bg.jpg)] bg-cover px-0">
@@ -86,20 +52,14 @@ export default function RegisterPage() {
           if (!validationResult.success) {
             return setError(validationResult.error.flatten().fieldErrors);
           }
-          setIsLoading(true);
           const { data } = validationResult;
           try {
-            const res = await startUpload(files);
-            setIsLoading(false);
-            const { url } = res![0]!;
-            console.log(url);
             const user = await registerApi.mutateAsync({
               name: data.username.value,
               college: data.college.value,
               contact: data.contact.value,
               department: data.department.value,
               email: data.email.value,
-              paymentScreenshotUrl: url,
               year,
               gender,
               userSlug: slugify(
@@ -191,45 +151,32 @@ export default function RegisterPage() {
             label="Year: "
           />
         </div>
-        <div className="flex flex-col items-center pt-5 md:flex-row">
-          <NativeQRCode
-            size={100}
-            value="upi://pay?pa=mskkaalam@okaxis&pn=Maheswari%20Venkateshwaran&am=100.00&cu=INR&aid=uGICAgIDQp8_nQg"
-            className="h-full w-full max-w-[150px]"
+        <Label className="flex items-center gap-2">
+          <Checkbox
+            name="agree"
+            onCheckedChange={(checked) => setAgreed(Boolean(checked))}
           />
-          <div className="m-5 min-w-[70%] space-y-3">
-            <p className="text-center text-sm font-bold md:text-left">
-              Pay ₹100 using this QR code and Upload a Screenshot of the
-              Payment.
-            </p>
-            <div
-              {...getRootProps()}
-              className="flex h-full cursor-pointer items-center justify-center border border-dashed p-5 text-center"
-            >
-              <input {...getInputProps()} />
-              {files.length === 0
-                ? "Click or Drop Picture here to Upload"
-                : "Click to Change image"}
-              {files.length > 0 && files[0]?.name}
-            </div>
+          <div>
+            I acknowledge and agree to the registration fee of{" "}
+            <span className="font-bold">₹100</span>, payable upon my arrival at
+            the event venue.
           </div>
-        </div>
+        </Label>
         {error?.serverError && (
           <p className="text-center text-red-500">
             An error occurred while registering. Please try again later.
           </p>
         )}
-        {(isLoading || registerApi.isLoading) && (
+        {registerApi.isLoading && (
           <div className="flex w-full flex-col items-center justify-center gap-2 p-5 text-slate-800">
             <Loader2 className="animate-spin duration-700" />
-            {isLoading && "Uploading Image..."}
-            {registerApi.isLoading && "Adding Participant..."}
+            Adding Participant...
           </div>
         )}
         <Button
           className="my-10"
           type="submit"
-          disabled={registerApi.isLoading || isLoading}
+          disabled={registerApi.isLoading || !isAgreed}
         >
           Register
         </Button>
