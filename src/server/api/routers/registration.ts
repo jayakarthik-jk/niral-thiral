@@ -36,4 +36,14 @@ export const registrationRouter = createTRPCRouter({
         return RegistrationErrors.SERVER_ERROR;
       }
     }),
+  getRegistrationByEvent: publicProcedure
+    .input(z.enum(events.enumValues))
+    .query(async ({ input, ctx: { db } }) => {
+      const result = await db
+        .select()
+        .from(registrations)
+        .where(eq(registrations.event, input))
+        .leftJoin(users, eq(users.id, registrations.userId));
+      return result;
+    }),
 });

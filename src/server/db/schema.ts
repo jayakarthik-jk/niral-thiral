@@ -48,20 +48,20 @@ export const insertUserSchema = createInsertSchema(users);
 
 const eventsList = [
   // technical
-  "Pa-Pre Trix",
-  "Dom Masters",
-  "Just a Terminal",
-  "Coding Chess",
-  "Code Decode",
-  "Relay Code",
+  "pa_pre_trix",
+  "dom_masters",
+  "Just_a_terminal",
+  "coding_chess",
+  "code_decode",
+  "relay_code",
   // non technical
-  "XoX",
-  "Jill Junk Juk",
-  "Free Fire",
-  "BGMI",
-  "Connexion",
-  "Gully Cricket",
-  "Lazer Maze",
+  "xox",
+  "jill_junk_juk",
+  "free_fire",
+  "bgmi",
+  "connexion",
+  "gully_cricket",
+  "lazer_maze",
 ] as const;
 export const parsedEvents = {
   technical: eventsList.slice(0, 6),
@@ -72,6 +72,20 @@ export type events = (typeof events.enumValues)[number];
 
 export const platforms = pgEnum("platforms", ["School", "College"]);
 export type platforms = (typeof platforms.enumValues)[number];
+
+export const departments = [
+  "CSE",
+  "IT",
+  "AI-DS",
+  "ECE",
+  "CSBS",
+  "EEE",
+  "MECH",
+  "AGRI",
+  "BIO-TECH",
+  "CIVIL",
+] as const;
+export type departments = (typeof departments)[number];
 
 export const registrations = pgTable(
   "registration",

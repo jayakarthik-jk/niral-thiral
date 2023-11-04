@@ -20,7 +20,7 @@ import { RegistrationErrors } from "@/utils/errors";
 
 export default function Events() {
   const scanner = useIdScanner();
-  const [selectedEvent, setSelectedEvent] = useState<events>("Coding Chess");
+  const [selectedEvent, setSelectedEvent] = useState<events>("coding_chess");
   const registrationApi = api.registration.register.useMutation();
   const [error, setError] = useState<RegistrationErrors>();
   return (

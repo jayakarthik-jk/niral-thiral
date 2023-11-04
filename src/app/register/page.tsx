@@ -5,7 +5,7 @@ import SelectMenu from "@/components/SelectMenu";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { years, type genders } from "@/server/db/schema";
+import { years, type genders, departments } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -22,19 +22,18 @@ const formSchema = z.object({
   email: z.object({ value: z.string().trim().email() }),
   contact: z.object({ value: z.string().length(10) }),
   college: z.object({ value: z.string().trim().min(1).max(255) }),
-  department: z.object({ value: z.string().trim().min(2) }),
 });
 interface FormErrorType {
   username?: string[] | undefined;
   email?: string[] | undefined;
   contact?: string[] | undefined;
   college?: string[] | undefined;
-  department?: string[] | undefined;
   serverError?: boolean | undefined;
 }
 
 export default function RegisterPage() {
   const [gender, setGender] = useState<genders>("male");
+  const [department, setDepartment] = useState<departments>("CSE");
   const [error, setError] = useState<FormErrorType | undefined>();
   const router = useRouter();
   const [isAgreed, setAgreed] = useState(false);
@@ -43,7 +42,7 @@ export default function RegisterPage() {
   const registerApi = api.users.createUser.useMutation();
 
   return (
-    <Container className="min-h-screen bg-[url(/bg.jpg)] bg-cover px-0">
+    <Container className="min-h-screen bg-[url(/bg.jpg)] bg-cover bg-center bg-no-repeat px-0">
       <form
         className="relative flex w-full max-w-[700px] flex-col gap-5 rounded-md border bg-white px-10 py-10 md:my-10"
         onSubmit={async (e) => {
@@ -58,12 +57,12 @@ export default function RegisterPage() {
               name: data.username.value,
               college: data.college.value,
               contact: data.contact.value,
-              department: data.department.value,
               email: data.email.value,
+              department,
               year,
               gender,
               userSlug: slugify(
-                `${data.college.value}-${data.department.value}-${
+                `${data.college.value}-${department}-${
                   data.username.value
                 }-${Date.now()}`,
               ),
@@ -133,16 +132,12 @@ export default function RegisterPage() {
           }}
         />
         <div className="flex w-full gap-5">
-          <InputField
+          <SelectMenu
             label="Department: "
             className="w-full"
-            name="department"
-            error={!!error?.department}
-            onChange={() => {
-              if (error?.department) {
-                setError({ ...error, department: undefined });
-              }
-            }}
+            value={department}
+            items={departments.slice()}
+            onChange={(value) => setDepartment(value as departments)}
           />
           <SelectMenu
             value={year}
